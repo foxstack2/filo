@@ -4,5 +4,9 @@
     "outDir": "dist",
     "sourceMap": true,
     "lib": ["es2023", "dom"]
+  },
+  "ts-node": {
+    // Tell ts-node CLI to install the --loader automatically, explained below
+    "esm": true
   }
 }
