@@ -1,11 +1,11 @@
 {
   "name": "@foxstack/filo",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
     "clean": "node ./scripts/clean.js",
-    "build": "pnpm swc src -s true -d dist",
+    "build": "pnpm exec tsc --declaration",
     "clean:build": "pnpm run clean && pnpm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -24,6 +24,23 @@
   },
   "type": "module",
   "dependencies": {
-    "@types/node": "^20.11.16"
+    "@types/chrome": "0.0.258",
+    "@types/node": "^20.11.16",
+    "@types/uuid": "^9.0.8",
+    "uuid": "^9.0.1"
+  },
+  "files": [
+    "**/*"
+  ],
+  "exports": {
+    "./dist/frontend": {
+      "types": "./dist/frontend/index.d.ts",
+      "import": "./dist/frontend/index.js"
+    },
+    "./dist/background": {
+      "types": "./dist/background/index.d.ts",
+      "import": "./dist/background/index.js"
+    },
+    "./package.json": "./package.json"
   }
 }

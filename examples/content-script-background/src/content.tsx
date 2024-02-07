@@ -1,7 +1,10 @@
+import { useMessageClient } from "@foxstack/filo-react-hook"
 import cssText from "data-text:~style.css"
+import { Button } from "flowbite-react"
 import type { PlasmoCSConfig } from "plasmo"
+import { useReducer } from "react"
 
-import { CountButton } from "~features/count-button"
+import { demoHubName, extensionId, type DemoMessage } from "~config"
 
 export const config: PlasmoCSConfig = {
   matches: ["https://www.plasmo.com/*"]
@@ -14,9 +17,18 @@ export const getStyle = () => {
 }
 
 const PlasmoOverlay = () => {
+  const [count, increase] = useReducer((c) => c + 1, 0)
+  const [client] = useMessageClient<DemoMessage>(extensionId, demoHubName)
+
   return (
-    <div className="plasmo-z-50 plasmo-flex plasmo-fixed plasmo-top-32 plasmo-right-8">
-      <CountButton />
+    <div className="z-50 flex fixed top-32 right-8">
+      <Button
+        onClick={() => {
+          increase()
+          client.sendMessage({ num: count })
+        }}>
+        Send Message "{count}"
+      </Button>
     </div>
   )
 }

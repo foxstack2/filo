@@ -1,5 +1,5 @@
 {
-  "name": "content-script-background",
+  "name": "@foxstack-filo-example/content-script-background",
   "displayName": "Content script background",
   "version": "0.0.1",
   "description": "A basic Plasmo extension.",
@@ -10,6 +10,9 @@
     "package": "plasmo package"
   },
   "dependencies": {
+    "@foxstack/filo": "workspace:*",
+    "@foxstack/filo-react-hook": "workspace:^",
+    "flowbite-react": "^0.7.2",
     "plasmo": "0.84.2",
     "react": "18.2.0",
     "react-dom": "18.2.0",
@@ -28,6 +31,7 @@
   "manifest": {
     "host_permissions": [
       "https://*/*"
-    ]
+    ],
+    "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEArCOzHc3tlOk7ATqXwy5rEuCncHScB+BUPrHfGgX6ckWbs3f44iyrYPQj7uwDq7fpWsdoKewh5hiazZFJ9W23cn4dT9JbdgurzGp0pUCFRJGRCn45y8lPudGT8OP3MpWTH49DWkm9xSugAcZQVmrTRSmRyhPKwESnxxESKC8AAvinmQmZGOadlDXKRye4qohYPAzM7VhdOf29Nbd6H7OxXDv/RE3tjUox+3tDGzOtjWarlrfrc+Dt0XNRp23KWbtRxBAjIenIMROZJpclaHTuF1pjh/NlQtv5yZ1rl3VvtmL9vJSr1lrtTEJNzxAC2Br1ryGJnondCA2Us6hUgN1MrQIDAQAB"
   }
 }

@@ -1,0 +1,46 @@
+{
+  "name": "@foxstack/filo-react-hook",
+  "version": "0.0.1",
+  "description": "",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "clean": "node ./scripts/clean.js",
+    "build": "pnpm exec tsc --declaration",
+    "clean:build": "pnpm run clean && pnpm run build"
+  },
+  "keywords": [],
+  "dependencies": {
+    "@foxstack/filo": "workspace:*",
+    "@types/chrome": "0.0.258"
+  },
+  "devDependencies": {
+    "@rollup/plugin-swc": "^0.3.0",
+    "@swc/cli": "^0.3.9",
+    "@swc/core": "^1.4.0",
+    "@tsconfig/node-lts": "^20.1.1",
+    "@types/react": "18.2.48",
+    "@types/react-dom": "18.2.18",
+    "pkg-dir": "^8.0.0",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "rollup": "^4.9.6",
+    "typescript": "^5.3.3"
+  },
+  "peerDependencies": {
+    "react": "18",
+    "react-dom": "18"
+  },
+  "type": "module",
+  "author": "",
+  "license": "MIT",
+  "files": [
+    "./**/*"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  }
+}
