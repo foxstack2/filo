@@ -33,4 +33,5 @@ export interface PortMessage<MessageType> {
 
 export interface FirstMessage {
   senderMeta: SenderMeta
+  echoMessage: boolean
 }

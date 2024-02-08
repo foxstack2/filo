@@ -22,7 +22,7 @@ export class AllMessageHub {
 
   public registerMessageHandler<MessageType>(
     name: string,
-    handler: MessageHandler<MessageType>
+    handler: IMessageHandler
   ) {
     let hub = this.getOrCreateHub(name)
 
@@ -44,8 +44,7 @@ export class AllMessageHub {
 
 class MessageHub {
   private readonly _name: string
-  private readonly _uuid_ports: Map<string, chrome.runtime.Port> = new Map()
-  private readonly _port_uuids: Map<chrome.runtime.Port, string> = new Map()
+  private readonly _portInfoStorage = new PortInfoStorage()
   private _message_handler: IMessageHandler = new EmptyMessageHandler()
 
   public get name(): string {
@@ -65,11 +64,13 @@ class MessageHub {
 
       // Store the port for further usage.
       let { clientId } = message.senderMeta
-      this._uuid_ports.set(clientId, port)
-      this._port_uuids.set(port, clientId)
+      let portInfo = new PortInfo(port, message.echoMessage)
+      this._portInfoStorage.addPortInfo(clientId, portInfo)
 
       // Register messages handler.
-      port.onMessage.addListener((message, port) => this.handleMessage(message))
+      port.onMessage.addListener((message, _) => {
+        this.handleMessage(portInfo, message)
+      })
 
       port.onDisconnect.addListener((port) => this.handleDisconnect(port))
     }
@@ -77,25 +78,56 @@ class MessageHub {
     port.onMessage.addListener(f)
   }
 
-  public registerMessageHandler<MessageType>(
-    handler: MessageHandler<MessageType>
-  ) {
+  public registerMessageHandler<MessageType>(handler: IMessageHandler) {
     this._message_handler = handler
   }
 
-  private handleMessage(message: any) {
-    this._message_handler.handleMessage(message)
+  private handleMessage(sender: PortInfo, message: any) {
+    this._message_handler.handleMessage(this._portInfoStorage, sender, message)
   }
 
   private handleDisconnect(port: chrome.runtime.Port) {
+    this._portInfoStorage.removePortInfoByPort(port)
+  }
+}
+
+class PortInfo {
+  public readonly port: chrome.runtime.Port
+  public readonly echoMessage: boolean
+
+  constructor(port: chrome.runtime.Port, echoMessage: boolean) {
+    this.port = port
+    this.echoMessage = echoMessage
+  }
+}
+
+class PortInfoStorage {
+  private readonly _uuid_port_infos: Map<string, PortInfo> = new Map()
+  private readonly _port_uuids: Map<chrome.runtime.Port, string> = new Map()
+
+  public addPortInfo(clientId: string, portInfo: PortInfo) {
+    this._uuid_port_infos.set(clientId, portInfo)
+    this._port_uuids.set(portInfo.port, clientId)
+  }
+
+  public removePortInfoByPort(port: chrome.runtime.Port) {
     let portUUID = this._port_uuids.get(port)
-    this._uuid_ports.delete(portUUID!)
+    console.assert(portUUID)
+    this._uuid_port_infos.delete(portUUID!)
     this._port_uuids.delete(port)
+  }
+
+  public *entries() {
+    yield* this._uuid_port_infos.entries()
   }
 }
 
 interface IMessageHandler {
-  handleMessage(portMessage: any): void
+  handleMessage(
+    storage: PortInfoStorage,
+    sender: PortInfo,
+    portMessage: any
+  ): void
 }
 
 class EmptyMessageHandler implements IMessageHandler {
@@ -118,10 +150,36 @@ export class MessageHandler<MessageType> implements IMessageHandler {
     this._handlers.delete(callback)
   }
 
-  public handleMessage(portMessage: any) {
+  public handleMessage(
+    storage: PortInfoStorage,
+    sender: PortInfo,
+    portMessage: any
+  ) {
     let _portMessage = portMessage as PortMessage<MessageType>
     let { message, tags } = _portMessage
 
     this._handlers.forEach((f) => f(message, tags))
+  }
+}
+
+export class BroadcastMessageHandler<MessageType> implements IMessageHandler {
+  // Broadcast the message to all clients in the current hub.
+  public handleMessage(
+    storage: PortInfoStorage,
+    sender: PortInfo,
+    portMessage: any
+  ): void {
+    let _portMessage = portMessage as PortMessage<MessageType>
+
+    // Iterate through all matched port to broadcast the message.
+    for (const [clientId, to] of storage.entries()) {
+      if (!this.senderGuard(sender, to)) continue
+      to.port.postMessage(_portMessage)
+    }
+  }
+
+  // Decide whether the message can be sent to the sender (if the sender matched other conditions).
+  private senderGuard(sender: PortInfo, to: PortInfo): boolean {
+    return sender != to || sender.echoMessage
   }
 }

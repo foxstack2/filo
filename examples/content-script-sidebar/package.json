@@ -1,6 +1,6 @@
 {
-  "name": "@foxstack-filo-example/content-script-background",
-  "displayName": "Content script background",
+  "name": "content-script-sidebar",
+  "displayName": "Content script sidebar",
   "version": "0.0.1",
   "description": "A basic Plasmo extension.",
   "author": "Ghislaine Laios <laios54@pm.me>",
@@ -11,7 +11,8 @@
   },
   "dependencies": {
     "@foxstack/filo": "workspace:*",
-    "@foxstack/filo-react-hook": "workspace:^",
+    "@foxstack/filo-react-hook": "workspace:*",
+    "flowbite": "^2.2.1",
     "flowbite-react": "^0.7.2",
     "plasmo": "0.84.2",
     "react": "18.2.0",
@@ -32,6 +33,6 @@
     "host_permissions": [
       "https://*/*"
     ],
-    "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEArCOzHc3tlOk7ATqXwy5rEuCncHScB+BUPrHfGgX6ckWbs3f44iyrYPQj7uwDq7fpWsdoKewh5hiazZFJ9W23cn4dT9JbdgurzGp0pUCFRJGRCn45y8lPudGT8OP3MpWTH49DWkm9xSugAcZQVmrTRSmRyhPKwESnxxESKC8AAvinmQmZGOadlDXKRye4qohYPAzM7VhdOf29Nbd6H7OxXDv/RE3tjUox+3tDGzOtjWarlrfrc+Dt0XNRp23KWbtRxBAjIenIMROZJpclaHTuF1pjh/NlQtv5yZ1rl3VvtmL9vJSr1lrtTEJNzxAC2Br1ryGJnondCA2Us6hUgN1MrQIDAQAB"
+    "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAgZpsTF7CuHpO+Wi62IFE8vtCtkss/mIrbT72FnJVFHT/FqJ8iypc8Fec50/br5mVMdkeLinfmoyj/Be3+ekzinH/w6mvYfbBT+tnI/Tdm5Vg8ol1x915mhvQwSVAOJEMpQswnD6AR+EHerN2vUVYmMVonOzeLqxJKVu1y86rPzGPvWqoKOTqY7AWw7us1VpzlL9O5k4BMxmR9YWBIb6GLFmTroTaxc5A+W/om15mnG4zA43iVO/0YXk/weRr043P0uv1GgKHWIU9zD+4d/TqmjHCGR4GvdGiGjKIGRStMLdV7J4OV6seWdBrmxlV+g7quUZHr1QR6mwUvdMjuLEdIwIDAQAB"
   }
 }

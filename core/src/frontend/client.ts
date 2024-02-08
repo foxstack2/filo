@@ -42,13 +42,16 @@ export class MessageClient<MessageType> {
     this._messageHandler = (m: any, p: chrome.runtime.Port) =>
       this.messageHandler(m, p)
     this._background.onMessage.addListener(this._messageHandler!)
-    this.sendFirstMessage({ senderMeta: new SenderMeta(this._clientId) })
+    this.sendFirstMessage({
+      senderMeta: new SenderMeta(this._clientId),
+      echoMessage: this._echoMessage
+    })
     this._connected = true
   }
 
   private messageHandler(
     $message: PortMessage<MessageType>,
-    port: chrome.runtime.Port
+    _port: chrome.runtime.Port
   ) {
     let { message, tags } = $message
     this._onMessageListeners.forEach((f) => {
