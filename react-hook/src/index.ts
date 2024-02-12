@@ -63,7 +63,6 @@ export function useMessage<MessageType>(client: MessageClient<MessageType>): [Me
 
     let f = (message: MessageType, tags: MessageTags) => {
       // handle the received message
-      console.log(message)
       setMessage(message)
       setMessageTags(tags)
     }
