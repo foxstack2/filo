@@ -1,6 +1,6 @@
 {
   "name": "@foxstack/filo-react-hook",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -34,9 +34,6 @@
   "type": "module",
   "author": "",
   "license": "MIT",
-  "files": [
-    "./**/*"
-  ],
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",

@@ -1,6 +1,6 @@
 {
   "name": "@foxstack/filo",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "",
   "main": "dist/index.js",
   "scripts": {
@@ -29,9 +29,6 @@
     "@types/uuid": "^9.0.8",
     "uuid": "^9.0.1"
   },
-  "files": [
-    "**/*"
-  ],
   "exports": {
     "./dist/frontend": {
       "types": "./dist/frontend/index.d.ts",
@@ -40,6 +37,10 @@
     "./dist/background": {
       "types": "./dist/background/index.d.ts",
       "import": "./dist/background/index.js"
+    },
+    "./dist/protocol": {
+      "types": "./dist/protocol.d.ts",
+      "import": "./dist/protocol.js"
     },
     "./package.json": "./package.json"
   }
