@@ -1,4 +1,4 @@
-import { useMessageClient } from "@foxstack/filo-react-hook"
+import { useMessage, useMessageClient } from "@foxstack/filo-react-hook"
 import { Button, Card, TextInput } from "flowbite-react"
 import { useEffect, useReducer, useState } from "react"
 
@@ -24,6 +24,8 @@ export function ChatCard({
     [] as DemoMessage[]
   )
 
+  const [messageReceived, _messageTagsReceived] = useMessage(client)
+
   useEffect(() => {
     let f = (msg: DemoMessage, _tags: any) => {
       addToHistory(msg)
@@ -44,7 +46,7 @@ export function ChatCard({
   return (
     <Card className={className}>
       <h2>Demo Chat</h2>
-      {/*<p>{JSON.stringify(messageHistory)}</p>*/}
+      <p>Current message received: {messageReceived?.msg}</p>
       <MessageArea messages={messageHistory}></MessageArea>
       <form className="flex flex-col gap-4">
         <TextInput
