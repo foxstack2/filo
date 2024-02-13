@@ -171,8 +171,14 @@ export class BroadcastMessageHandler<MessageType> implements IMessageHandler {
   ): void {
     let _portMessage = portMessage as PortMessage<MessageType>
 
+    let tabId = sender.port.sender?.tab?.id
+
+    if (tabId) {
+      _portMessage.tags.standard.senderMeta.tabId = tabId
+    }
+
     // Iterate through all matched port to broadcast the message.
-    for (const [clientId, to] of storage.entries()) {
+    for (const [_clientId, to] of storage.entries()) {
       if (!this.senderGuard(sender, to)) continue
       to.port.postMessage(_portMessage)
     }

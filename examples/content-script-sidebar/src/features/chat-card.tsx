@@ -24,7 +24,7 @@ export function ChatCard({
     [] as DemoMessage[]
   )
 
-  const [messageReceived, _messageTagsReceived] = useMessage(client)
+  const [messageReceived, messageTagsReceived] = useMessage(client)
 
   useEffect(() => {
     let f = (msg: DemoMessage, _tags: any) => {
@@ -46,7 +46,10 @@ export function ChatCard({
   return (
     <Card className={className}>
       <h2>Demo Chat</h2>
-      <p>Current message received: {messageReceived?.msg}</p>
+      <p>
+        Current message received: {messageReceived?.msg} (tab_id:{" "}
+        {messageTagsReceived?.standard.senderMeta.tabId})
+      </p>
       <MessageArea messages={messageHistory}></MessageArea>
       <form className="flex flex-col gap-4">
         <TextInput

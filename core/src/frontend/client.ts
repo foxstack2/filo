@@ -22,6 +22,7 @@ export class MessageClient<MessageType> {
   private _messageHandler:
     | ((message: any, port: chrome.runtime.Port) => void)
     | undefined
+  private _senderMeta: SenderMeta | undefined
 
   public constructor(options: MessageClientOptions) {
     this._extensionId = options.extensionId
@@ -31,7 +32,7 @@ export class MessageClient<MessageType> {
     this._onMessageListeners = new Set()
   }
 
-  public connect() {
+  public async connect() {
     if (this._connected) {
       throw "Already connected."
     }
@@ -42,8 +43,14 @@ export class MessageClient<MessageType> {
     this._messageHandler = (m: any, p: chrome.runtime.Port) =>
       this.messageHandler(m, p)
     this._background.onMessage.addListener(this._messageHandler!)
+    let currentTabId = 0
+    if (chrome && chrome.tabs) {
+      let currentTab = await chrome.tabs.getCurrent()
+      currentTabId = currentTab && currentTab.id ? currentTab.id : 0
+    }
+    this._senderMeta = new SenderMeta(this._clientId, currentTabId)
     this.sendFirstMessage({
-      senderMeta: new SenderMeta(this._clientId),
+      senderMeta: this._senderMeta,
       echoMessage: this._echoMessage
     })
     this._connected = true
@@ -85,9 +92,10 @@ export class MessageClient<MessageType> {
 
   public sendMessage(message: MessageType) {
     this.finalizedGuard()
+    this.connectGuard()
     let m: PortMessage<MessageType> = {
       message,
-      tags: new MessageTags(new SenderMeta(this._clientId))
+      tags: new MessageTags(this._senderMeta!)
     }
     this._background!.postMessage(m)
   }

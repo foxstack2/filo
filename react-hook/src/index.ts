@@ -28,13 +28,15 @@ export function useMessageClient<MessageType>(
   let [client, setClient] = useState(createClient)
 
   useEffect(() => {
-    client.connect()
-
     // When the client is disconnected, just create a new client.
     let onDisconnect = (_port: chrome.runtime.Port) => {
       setClient(createClient())
     }
-    client.onDisconnect(onDisconnect)
+
+    ;(async function () {
+      await client.connect()
+      client.onDisconnect(onDisconnect)
+    })()
 
     return () => {
       client.removeOnDisconnectListener(onDisconnect)
@@ -43,7 +45,6 @@ export function useMessageClient<MessageType>(
 
   return [client]
 }
-
 
 /**
  * This hook sets up a listener for messages received from the provided message client.
@@ -54,7 +55,9 @@ export function useMessageClient<MessageType>(
  * @param {MessageClient<MessageType>} client - The message client instance to listen to.
  * @returns {[MessageType | undefined, MessageTags | undefined]} - An array containing the received message and its tags.
  */
-export function useMessage<MessageType>(client: MessageClient<MessageType>): [MessageType | undefined, MessageTags | undefined] {
+export function useMessage<MessageType>(
+  client: MessageClient<MessageType>
+): [MessageType | undefined, MessageTags | undefined] {
   const [message, setMessage] = useState<MessageType>()
   const [messageTags, setMessageTags] = useState<MessageTags>()
 
